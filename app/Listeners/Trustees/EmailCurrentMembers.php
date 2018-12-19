@@ -65,7 +65,6 @@ class EmailCurrentMembers implements ShouldQueue
         }
 
         $this->mailgun->send($views, $data, function ($message) use($event, $to) {
-            dump($to);
             $message
                 ->subject($event->subject)
                 ->from('trustees@nottinghack.org.uk', 'Nottingham Hackspace Trustees')

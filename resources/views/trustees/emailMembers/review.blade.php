@@ -32,6 +32,14 @@
           <form action="{{ route('trustees.email-members.send') }}" method="POST" style="display: none">
             @csrf
             @method('put')
+            <input type="hidden" id="testSend" name="testSend" value="1"/>
+          </form>Send Test
+        </a>
+        <a class="btn btn-primary btn-sm btn-sm-spacing" href="javascript:void(0);" onclick="$(this).find('form').submit();" >
+          <form action="{{ route('trustees.email-members.send') }}" method="POST" style="display: none">
+            @csrf
+            @method('put')
+            <input type="hidden" id="testSend" name="testSend" value="0"/>
           </form>Send
         </a>
     </div>

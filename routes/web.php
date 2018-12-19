@@ -48,9 +48,13 @@ Route::post('trustees/email-members', function (Request $request) {
 
 Route::put('trustees/email-members', function (Request $request) {
     $draft = \Cache::get('trustees.emailMembers.draft');
-    event(new EmailToCurrentMembers($draft['subject'], $draft['emailContent']));
-    flash('Email queued for sending', 'success');
-    \Cache::forget('trustees.emailMembers.draft');
+    event(new EmailToCurrentMembers($draft['subject'], $draft['emailContent'], $request->testSend));
+    if (! $request->testSend) {
+        flash('Email queued for sending', 'success');
+        \Cache::forget('trustees.emailMembers.draft');
+    } else {
+        flash('Test email queued for sending', 'success');
+    }
 
     return redirect()->route('trustees.email-members.draft');
 })->name('trustees.email-members.send');
