@@ -24,13 +24,13 @@ Route::get('trustees/email-members', function () {
         'subject' => '',
         'emailContent' => ''
     ]);
-    
+
     return view('trustees.emailMembers.draft', $draft);
 })->name('trustees.email-members.draft');
 
 Route::post('trustees/email-members', function (Request $request) {
     \Cache::put('trustees.emailMembers.draft', [
-        'subject' => $request->subject,  
+        'subject' => $request->subject,
         'emailContent' => $request->emailContent,
     ], now()->addMinutes(30));
 
@@ -40,7 +40,7 @@ Route::post('trustees/email-members', function (Request $request) {
 
     return view('trustees.emailMembers.review')
         ->with([
-            'subject' => $subject,
+            'subject' => $request->subject,
             'emailContent' => $renderedHtml,
             'emailPlain' => $renderedTextPlain,
         ]);

@@ -41,7 +41,7 @@ class ToCurrentMembers extends Mailable implements ShouldQueue
     {
         $this->subject = $subject;
         $this->htmlContent = $htmlContent;
-        $this->textPlain = Html2Text::convert($htmlContent);  
+        $this->textPlain = Html2Text::convert($htmlContent);
 
         //TODO: for hms2 pull trustee address from Role::TEAM_TRUSTEES
     }
@@ -53,10 +53,7 @@ class ToCurrentMembers extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->from([
-                'address' => 'trustees@nottinghack.org.uk',
-                'name' => 'Nottingham Hackspace Trustees',
-            ])
+        return $this->from('trustees@nottinghack.org.uk', 'Nottingham Hackspace Trustees')
             ->subject($this->subject)
             ->view('emails.trustees.toCurrentMembers')
             ->text('emails.trustees.toCurrentMembers_plain');

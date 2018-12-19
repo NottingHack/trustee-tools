@@ -21,14 +21,22 @@ class EmailToCurrentMembers
     public $htmlContent;
 
     /**
+     * Should this only sent as a test.
+     * @var bool
+     */
+    public $testSend;
+
+    /**
      * Create a new event instance.
      *
      * @param string $subject The email subject.
      * @param string $htmlContent The email content as text/html.
+     * @param bool $testSend Should this only sent as a test.
      */
-    public function __construct(string $subject, string $htmlContent)
-    {   
+    public function __construct(string $subject, string $htmlContent, bool $testSend = True)
+    {
         $this->subject = $subject;
         $this->htmlContent = $htmlContent;
+        $this->testSend = $testSend;
     }
 }
