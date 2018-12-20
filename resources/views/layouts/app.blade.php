@@ -15,7 +15,7 @@
 
   <!-- Scripts -->
   <!-- Font Awesome -->
-  <script src="https://use.fontawesome.com/5fd8ad5172.js"></script>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
 
   <!-- fav icons -->
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
@@ -122,7 +122,8 @@
   </footer>
 
   <!-- Scripts -->
-
+  <script src="{{ mix('/js/manifest.js') }}"></script>
+  <script src="{{ mix('js/vendor.js') }}"></script>
   <script src="{{ mix('js/app.js') }}"></script>
 
   @stack('scripts')
