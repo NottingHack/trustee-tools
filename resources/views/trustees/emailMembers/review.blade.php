@@ -18,8 +18,11 @@
     </div>
     <div class="card-body">
       <div class="tab-content">
-        <div class="tab-pane active" id="html" role="tabpanel" aria-labelledby="html-tab">
-          {!! $emailContent !!}
+        <div class="tab-pane embed-responsive embed-responsive-16by9 active " id="html" role="tabpanel" aria-labelledby="html-tab">
+
+            <iframe src="{{ route('trustees.email-members.preview') }}"></iframe>
+
+          {{-- {!! $emailContent !!} --}}
         </div>
         <div class="tab-pane" id="plain" role="tabpanel" aria-labelledby="plain-tab">
           <pre style="word-wrap: break-word; white-space: pre-wrap;">{!! $emailPlain !!}</pre>

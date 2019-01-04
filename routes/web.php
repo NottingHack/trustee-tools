@@ -46,6 +46,15 @@ Route::post('trustees/email-members', function (Request $request) {
         ]);
 })->name('trustees.email-members.review');
 
+Route::get('trustees/email-members/review', function () {
+    $draft = \Cache::get('trustees.emailMembers.draft', [
+        'subject' => '',
+        'emailContent' => ''
+    ]);
+
+    return new ToCurrentMembers($draft['subject'], $draft['emailContent']);
+})->name('trustees.email-members.preview');
+
 Route::put('trustees/email-members', function (Request $request) {
     $draft = \Cache::get('trustees.emailMembers.draft');
     event(new EmailToCurrentMembers($draft['subject'], $draft['emailContent'], $request->testSend));
