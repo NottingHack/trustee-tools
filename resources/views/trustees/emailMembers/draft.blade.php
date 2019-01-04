@@ -34,7 +34,7 @@
 
 @section('content')
 <div class="container">
-  <p>Use the form below to darft an email to all members</p>
+  <p>Use the form below to draft an email to all members</p>
   <p>Note the formating template will add "Hello name", at the top and "This email was sent to you as a current member of Nottingham Hackspace" as a footer</p>
   <form class="form-group" id="tustesse-emailMembers-draft-from" role="form" method="POST" action="{{  route('trustees.email-members.review') }}">
     @csrf
