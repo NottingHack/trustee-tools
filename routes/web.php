@@ -1,8 +1,11 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\HtmlString;
 use App\Mail\Trustees\ToCurrentMembers;
 use App\Events\Trustees\EmailToCurrentMembers;
+use Illuminate\Contracts\View\Factory as ViewFactory;
+use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,25 +37,27 @@ Route::post('trustees/email-members', function (Request $request) {
         'emailContent' => $request->emailContent,
     ], now()->addMinutes(30));
 
-    $emailView = (new ToCurrentMembers($request->subject, $request->emailContent));
-    $renderedHtml = $emailView->render();
+    $emailView = new ToCurrentMembers($request->subject, $request->emailContent);
     $renderedTextPlain = $emailView->renderText();
 
     return view('trustees.emailMembers.review')
         ->with([
             'subject' => $request->subject,
-            'emailContent' => $renderedHtml,
             'emailPlain' => $renderedTextPlain,
         ]);
 })->name('trustees.email-members.review');
 
-Route::get('trustees/email-members/review', function () {
+Route::get('trustees/email-members/review', function (ViewFactory $viewFactory, CssToInlineStyles $cssToInlineStyles) {
     $draft = \Cache::get('trustees.emailMembers.draft', [
         'subject' => '',
         'emailContent' => ''
     ]);
 
-    return new ToCurrentMembers($draft['subject'], $draft['emailContent']);
+    $emailView = new ToCurrentMembers($draft['subject'], $draft['emailContent']);
+    $renderedHtml = $emailView->render();
+    $renderedHtmlCSS = new HtmlString($cssToInlineStyles->convert($renderedHtml, $viewFactory->make('vendor.mail.html.themes.default')->render()));
+
+    return response($renderedHtmlCSS);
 })->name('trustees.email-members.preview');
 
 Route::put('trustees/email-members', function (Request $request) {

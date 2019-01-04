@@ -4,10 +4,14 @@ namespace App\Listeners\Trustees;
 
 use Html2Text\Html2Text;
 use App\HMSModels\Members;
+use Illuminate\Support\HtmlString;
 use Bogardo\Mailgun\Contracts\Mailgun;
 use App\Mail\Trustees\ToCurrentMembers;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Events\Trustees\EmailToCurrentMembers;
+use Illuminate\Contracts\View\Factory as ViewFactory;
+use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
+
 
 class EmailCurrentMembers implements ShouldQueue
 {
@@ -17,13 +21,27 @@ class EmailCurrentMembers implements ShouldQueue
     protected $mailgun;
 
     /**
+     * @var CssToInlineStyles
+     */
+    protected $cssToInlineStyles;
+
+    /**
+     * @var ViewFactory
+     */
+    protected $viewFactory;
+
+    /**
      * Create the event listener.
      *
      * @return void
      */
-    public function __construct(Mailgun $mailgun)
+    public function __construct(Mailgun $mailgun,
+        CssToInlineStyles $cssToInlineStyles,
+        ViewFactory $viewFactory)
     {
         $this->mailgun = $mailgun;
+        $this->cssToInlineStyles = $cssToInlineStyles;
+        $this->viewFactory = $viewFactory;
     }
 
     /**
@@ -40,9 +58,14 @@ class EmailCurrentMembers implements ShouldQueue
             ->get();
 
         // Send using Mailgun
-        $views = ['html' => 'emails.trustees.toCurrentMembers', 'text' => 'emails.trustees.toCurrentMembers_plain'];
+        $views = ['html' => 'emails.trustees.toCurrentMembers_mailgun', 'text' => 'emails.trustees.toCurrentMembers_plain'];
+
+        $emailView = new ToCurrentMembers($event->subject, $event->htmlContent);
+        $renderedHtml = $emailView->render();
+        $renderedHtmlCSS = new HtmlString($this->cssToInlineStyles->convert($renderedHtml, $this->viewFactory->make('vendor.mail.html.themes.default')->render()));
+
         $data = [
-            'htmlContent' => $event->htmlContent,
+            'htmlContent' => $renderedHtmlCSS,
             'textPlain' => Html2Text::convert($event->htmlContent),
         ];
 
