@@ -33,14 +33,14 @@
             @csrf
             @method('put')
             <input type="hidden" id="testSend" name="testSend" value="1"/>
-          </form>Send Test
+          </form>Send Test to Trustees
         </a>
         <button class="btn btn-primary btn-sm btn-sm-spacing btn-danger float-right" data-toggle="confirmation" data-placement="bottom">
           <form action="{{ route('trustees.email-members.send') }}" method="POST" style="display: none">
             @csrf
             @method('put')
             <input type="hidden" id="testSend" name="testSend" value="0"/>
-          </form>Send to all current members
+          </form>Send to {{ $currentMemberCount }} current members
         </button>
     </div>
   </div>

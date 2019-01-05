@@ -1,5 +1,6 @@
 <?php
 
+use App\HMSModels\Members;
 use Illuminate\Http\Request;
 use Illuminate\Support\HtmlString;
 use App\Mail\Trustees\ToCurrentMembers;
@@ -40,10 +41,16 @@ Route::post('trustees/email-members', function (Request $request) {
     $emailView = new ToCurrentMembers($request->subject, $request->emailContent);
     $renderedTextPlain = $emailView->renderText();
 
+    $currentMemberCount = Members::where('member_status', 5)
+        ->where('member_id', '!=', 778)
+        ->where('member_id', '!=', 3033)
+        ->count();
+
     return view('trustees.emailMembers.review')
         ->with([
             'subject' => $request->subject,
             'emailPlain' => $renderedTextPlain,
+            'currentMemberCount' => $currentMemberCount,
         ]);
 })->name('trustees.email-members.review');
 
