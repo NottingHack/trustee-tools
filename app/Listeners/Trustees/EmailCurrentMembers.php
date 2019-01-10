@@ -91,6 +91,7 @@ class EmailCurrentMembers implements ShouldQueue
             $message
                 ->trackOpens(true)
                 ->subject($event->subject)
+                ->header('sender', 'Nottingham Hackspace Trustees <trustees@mg.nottinghack.org.uk>')
                 ->replyTo('trustees@nottinghack.org.uk', 'Nottingham Hackspace Trustees')
                 ->from('trustees@mg.nottinghack.org.uk', 'Nottingham Hackspace Trustees')
                 ->to($to);
