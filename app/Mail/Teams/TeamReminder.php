@@ -38,7 +38,8 @@ class TeamReminder extends Mailable
     {
         $month = Carbon::now()->addDays(8)->format('F');
 
-        return $this->from('trustees@nottinghack.org.uk', 'Nottingham Hackspace Trustees')
+        return $this->from('trustees@mg.nottinghack.org.uk', 'Nottingham Hackspace Trustees')
+            ->replyTo('trustees@nottinghack.org.uk', 'Nottingham Hackspace Trustees')
             ->subject('Team Reminder: ' . $month. ' Members Meeting Update')
             ->markdown('emails.teams.reminder');
     }
