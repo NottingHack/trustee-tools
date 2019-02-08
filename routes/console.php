@@ -1,5 +1,6 @@
 <?php
 
+use App\Jobs\AbandonedSheetJob;
 use App\Jobs\EmailTeamReminder;
 use Illuminate\Foundation\Inspiring;
 
@@ -21,4 +22,9 @@ Artisan::command('inspire', function () {
 
 Artisan::command('team-reminder', function () {
     EmailTeamReminder::dispatch();
+});
+
+
+Artisan::command('sheet', function () {
+    AbandonedSheetJob::dispatch();
 });
