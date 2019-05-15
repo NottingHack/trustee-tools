@@ -66,7 +66,7 @@ class EmailTeamReminder implements ShouldQueue
             return;
         }
 
-        if ($date->addDays(8)->day > 8) {
+        if ($date->addDays(8)->day >= 8) {
             // not the Tuesday we want
             return;
         }
