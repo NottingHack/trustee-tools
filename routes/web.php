@@ -62,7 +62,12 @@ Route::get('trustees/email-members/review', function (ViewFactory $viewFactory, 
 
     $emailView = new ToCurrentMembers($draft['subject'], $draft['emailContent']);
     $renderedHtml = $emailView->render();
-    $renderedHtmlCSS = new HtmlString($cssToInlineStyles->convert($renderedHtml, $viewFactory->make('vendor.mail.html.themes.default')->render()));
+    $renderedHtmlCSS = new HtmlString(
+        $cssToInlineStyles->convert(
+            $renderedHtml,
+            $viewFactory->make('vendor.mail.html.themes.default')->render()
+        )
+    );
 
     return response($renderedHtmlCSS);
 })->name('trustees.email-members.preview');
@@ -79,3 +84,30 @@ Route::put('trustees/email-members', function (Request $request) {
 
     return redirect()->route('trustees.email-members.draft');
 })->name('trustees.email-members.send');
+
+Route::get('trustees/opa-csv', function () {
+    $headers = [
+        'Content-type' => 'text/csv',
+        'Pragma' => 'no-cache',
+        'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+        'Expires' => '0'
+    ];
+
+    $members = Members::where('member_status', 5)
+        ->where('member_id', '!=', 778)
+        ->where('member_id', '!=', 3033)
+        ->get();
+
+    $callback = function () use ($members) {
+        $file = fopen('php://output', 'w');
+
+        foreach ($members as $member) {
+            fputcsv(
+                $file,
+                [$member->email]
+            );
+        }
+        fclose($file);
+    };
+    return response()->streamDownload($callback, 'currentMemberEmails-' . date('d-m-Y-H:i:s') . '.csv', $headers);
+})->name('trustees.opa-csv');

@@ -5,8 +5,8 @@
     <h2>Welcome to Nottingham Hackspace Trustee Resources!</h2>
     <p>Fromo here you can do the following tasks</p>
     <ul>
-        <li><a href={{ route('trustees.email-members.draft') }}>Send Email to all current members</a></li>
-        <li>Download CSV of Member Names and emails for use with OPA Vote</li>
+        <li><a href="{{ route('trustees.email-members.draft') }}">Send Email to all current members</a></li>
+        <li><a href="{{ route('trustees.opa-csv') }}" target="_blank">Download CSV of Member emails for use with OPA Vote</a></li>
     </ul>
 </div>
 @endsection
