@@ -2,6 +2,7 @@
 
 use App\Jobs\AbandonedSheetJob;
 use App\Jobs\EmailTeamReminder;
+use App\Jobs\SnackspaceDebtJob;
 use Illuminate\Foundation\Inspiring;
 
 /*
@@ -27,4 +28,8 @@ Artisan::command('team-reminder', function () {
 
 Artisan::command('sheet', function () {
     AbandonedSheetJob::dispatch();
+});
+
+Artisan::command('snackspace', function () {
+    SnackspaceDebtJob::dispatch();
 });
