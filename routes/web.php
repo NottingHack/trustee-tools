@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use App\HMSModels\Members;
 use Illuminate\Http\Request;
 use App\HMSModels\SnackspaceDebt;
@@ -130,5 +131,23 @@ Route::get('snackspace-debt', function () {
     $chart->dataset('Total Credit', 'line', $credit->values())
         ->color('#00ff00');
 
-    return view('snackspace.debt')->with('chart', $chart);
+    $dataRecent = SnackspaceDebt::where('audit_time', '>', Carbon::now()->subYear())
+        ->selectRaw('total_debt/100 as td, total_credit/100 as tc, audit_time')
+        ->get();
+    $debt = $dataRecent->pluck('td', 'audit_time');
+    $credit = $dataRecent->pluck('tc', 'audit_time');
+    $keys = $debt->keys()->map(function ($item, $key) {
+        return substr($item, 0, 10);
+    });
+
+    $chartRecent = new SnackspaceDebtChart;
+    $chartRecent->labels($keys);
+    $chartRecent->dataset('Total Debt', 'line', $debt->values())
+        ->color('#ff0000');
+    $chartRecent->dataset('Total Credit', 'line', $credit->values())
+        ->color('#00ff00');
+
+    return view('snackspace.debt')
+        ->with('chart', $chart)
+        ->with('recent', $chartRecent);
 })->name('snackspace.debt');
