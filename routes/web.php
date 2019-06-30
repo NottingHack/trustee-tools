@@ -2,7 +2,9 @@
 
 use App\HMSModels\Members;
 use Illuminate\Http\Request;
+use App\HMSModels\SnackspaceDebt;
 use Illuminate\Support\HtmlString;
+use App\Charts\SnackspaceDebtChart;
 use App\Mail\Trustees\ToCurrentMembers;
 use App\Events\Trustees\EmailToCurrentMembers;
 use Illuminate\Contracts\View\Factory as ViewFactory;
@@ -111,3 +113,22 @@ Route::get('trustees/opa-csv', function () {
     };
     return response()->streamDownload($callback, 'currentMemberEmails-' . date('d-m-Y-H:i:s') . '.csv', $headers);
 })->name('trustees.opa-csv');
+
+Route::get('snackspace-debt', function () {
+    $data = SnackspaceDebt::selectRaw('total_debt/100 as td, total_credit/100 as tc, audit_time')
+        ->get();
+    $debt = $data->pluck('td', 'audit_time');
+    $credit = $data->pluck('tc', 'audit_time');
+    $keys = $debt->keys()->map(function ($item, $key) {
+        return substr($item, 0, 10);
+    });
+
+    $chart = new SnackspaceDebtChart;
+    $chart->labels($keys);
+    $chart->dataset('Total Debt', 'line', $debt->values())
+        ->color('#ff0000');
+    $chart->dataset('Total Credit', 'line', $credit->values())
+        ->color('#00ff00');
+
+    return view('snackspace.debt')->with('chart', $chart);
+})->name('snackspace.debt');
