@@ -4,6 +4,7 @@ use Carbon\Carbon;
 use App\HMSModels\Members;
 use Illuminate\Http\Request;
 use App\HMSModels\SnackspaceDebt;
+use App\HMSModels\Views\LowPayer;
 use Illuminate\Support\HtmlString;
 use App\Charts\SnackspaceDebtChart;
 use App\Mail\Trustees\ToCurrentMembers;
@@ -151,3 +152,29 @@ Route::get('snackspace-debt', function () {
         ->with('chart', $chart)
         ->with('recent', $chartRecent);
 })->name('snackspace.debt');
+
+Route::get('trustees/low-payers', function () {
+    $headers = [
+        'Content-type' => 'text/csv',
+        'Pragma' => 'no-cache',
+        'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+        'Expires' => '0'
+    ];
+
+    $lowPayers = LowPayer::all();
+    // dd($lowPayers);
+    $callback = function () use ($lowPayers) {
+        $file = fopen('php://output', 'w');
+
+        fputcsv($file, array_keys($lowPayers->first()->toArray()));
+        foreach ($lowPayers as $lowPayer) {
+            fputcsv(
+                $file,
+                $lowPayer->toArray()
+            );
+        }
+        fclose($file);
+    };
+
+    return response()->streamDownload($callback, 'low-payers-' . date('d-m-Y-H:i:s') . '.csv', $headers);
+})->name('trustees.low-payers');
