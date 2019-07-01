@@ -3,7 +3,7 @@
 namespace App\Console;
 
 use App\Jobs\EmailTeamReminder;
-use App\HMSModels\SnackspaceDebt;
+use App\Jobs\SnackspaceDebtJob;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->job(new EmailTeamReminder)->weeklyOn(2, '7:27');
-        $schedule->job(new SnackspaceDebt)->daily();
+        $schedule->job(new SnackspaceDebtJob)->daily();
     }
 
     /**
