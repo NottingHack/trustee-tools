@@ -26,7 +26,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->job(new EmailTeamReminder)->weeklyOn(2, '7:27');
+        // $schedule->job(new EmailTeamReminder)->weeklyOn(2, '7:27');
         // $schedule->job(new SnackspaceDebtJob)->daily();
     }
 
